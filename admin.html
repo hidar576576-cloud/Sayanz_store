@@ -1,10 +1,455 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sayanz Admin</title><link rel="stylesheet" href="style.css"></head>
-<body><header class="topbar"><a class="logo" href="index.html"><span>✦</span> SAYANZ <small>ADMIN</small></a><a class="primary" href="index.html">العودة للمتجر</a></header>
-<main class="section"><p class="eyebrow">ADMIN PANEL</p><h1>إدارة الطلبات</h1><p style="color:#a7a4bb">هذه لوحة تجريبية محلية للمرحلة الأولى.</p><div id="orders"></div></main>
-<script>
-function render(){const o=JSON.parse(localStorage.getItem("sayanzOrders")||"[]");const box=document.getElementById("orders");
-if(!o.length){box.innerHTML='<div class="cart" style="margin-top:20px">لا توجد طلبات حتى الآن.</div>';return}
-box.innerHTML=o.slice().reverse().map((x,i)=>`<div class="cart" style="margin:16px 0"><h2>${x.id}</h2><p>العميل: ${x.customer.name} — ${x.customer.phone}</p><p>البريد: ${x.customer.email}</p><p>الدفع: ${x.payment} ${x.paymentRef?("— "+x.paymentRef):""}</p><p>المنتجات: ${x.products.map(p=>p.name).join("، ")}</p><p><strong>المجموع: ${new Intl.NumberFormat('en-US').format(x.total)} IQD</strong></p><label>الحالة<select onchange="changeStatus('${x.id}',this.value)" style="width:100%;padding:11px;margin-top:7px;background:#0b0b18;color:white;border:1px solid #2c2a48;border-radius:10px"><option ${x.status==="بانتظار الدفع"?"selected":""}>بانتظار الدفع</option><option ${x.status==="قيد المراجعة"?"selected":""}>قيد المراجعة</option><option ${x.status==="تم الدفع"?"selected":""}>تم الدفع</option><option ${x.status==="جاري التسليم"?"selected":""}>جاري التسليم</option><option ${x.status==="تم التسليم"?"selected":""}>تم التسليم</option></select></label></div>`).join("")}
-function changeStatus(id,status){let o=JSON.parse(localStorage.getItem("sayanzOrders")||"[]");let x=o.find(v=>v.id===id);if(x)x.status=status;localStorage.setItem("sayanzOrders",JSON.stringify(o));render()}
-render();
-</script></body></html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sayanz — سوق المنتجات الرقمية</title>
+<meta name="description" content="Sayanz، المكان الذي تبيع وتشتري فيه المنتجات الرقمية: قوالب تصميم، دورات، كتب إلكترونية، وأيقونات.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="glow-field" aria-hidden="true">
+  <span class="glow glow-a"></span>
+  <span class="glow glow-b"></span>
+  <span class="glow glow-c"></span>
+  <div class="grid-overlay"></div>
+</div>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="#top" class="logo" aria-label="الصفحة الرئيسية لـ Sayanz">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="30" height="30">
+          <polygon points="20,2 37,11 37,29 20,38 3,29 3,11" fill="none" stroke="currentColor" stroke-width="2"/>
+          <polygon points="20,11 29,16 29,24 20,29 11,24 11,16" fill="currentColor" opacity="0.9"/>
+        </svg>
+      </span>
+      <span class="logo-word">sayanz</span>
+    </a>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="#categories">الفئات</a>
+      <a href="#rows">المنتجات</a>
+      <a href="#why">لماذا Sayanz</a>
+      <a href="#sell">ابدأ البيع</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn" id="searchToggle" aria-label="بحث" aria-expanded="false">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn cart-btn" id="cartBtn" aria-label="السلة">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6h2l2 11h10l2-8H7" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.4" fill="currentColor"/><circle cx="17" cy="20" r="1.4" fill="currentColor"/></svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+      <a href="#sell" class="btn btn-primary btn-sm">ابدأ البيع</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="القائمة" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="search-panel" id="searchPanel">
+    <div class="wrap">
+      <input type="text" placeholder="ابحث عن قالب، دورة، كتاب…" aria-label="ابحث في المتجر" id="searchInput">
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <p class="kicker">سوق مفتوح للمبدعين والمشترين</p>
+        <h1>منتجات رقمية تستحق أن تُبنى عليها أعمالك</h1>
+        <p class="hero-lede">قوالب تصميم جاهزة، دورات مركّزة، وكتب وأيقونات ينتقيها فريقنا قبل نشرها — تشتري بثقة، وتبيع أمام جمهور يبحث عن الجودة تحديدًا.</p>
+        <div class="hero-cta">
+          <a href="#rows" class="btn btn-primary">تصفح المنتجات</a>
+          <a href="#sell" class="btn btn-ghost">بيع منتجك الأول</a>
+        </div>
+        <dl class="hero-stats">
+          <div><dt>منتج منشور</dt><dd>3٬200+</dd></div>
+          <div><dt>بائع نشِط</dt><dd>640</dd></div>
+          <div><dt>تقييم متوسط</dt><dd>4.8</dd></div>
+        </dl>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="float-card card-course">
+          <span class="fc-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5V5.5Z" stroke="currentColor" stroke-width="1.6"/><path d="M4 18a2.5 2.5 0 0 1 2.5-2.5H20" stroke="currentColor" stroke-width="1.6"/></svg>
+          </span>
+          <div class="fc-text"><strong>أساسيات UX</strong><span>دورة · 6 ساعات</span></div>
+        </div>
+        <div class="float-card card-template">
+          <span class="fc-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5h17M9 9.5V21" stroke="currentColor" stroke-width="1.6"/></svg>
+          </span>
+          <div class="fc-text"><strong>قالب لوحة تحكم</strong><span>Figma · UI Kit</span></div>
+        </div>
+        <div class="float-card card-ebook">
+          <span class="fc-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 5c2.5-1.2 5-1.2 7.5 0v14c-2.5-1.2-5-1.2-7.5 0V5ZM19.5 5c-2.5-1.2-5-1.2-7.5 0v14c2.5-1.2 5-1.2 7.5 0V5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          </span>
+          <div class="fc-text"><strong>دليل التسويق الرقمي</strong><span>كتاب · PDF</span></div>
+        </div>
+        <div class="orbit-ring"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY PILLS -->
+  <section class="categories" id="categories">
+    <div class="wrap">
+      <div class="cat-scroll" id="catScroll" role="tablist" aria-label="تصفية حسب الفئة">
+        <button class="cat-pill is-active" role="tab" aria-selected="true" data-filter="all">الكل</button>
+        <button class="cat-pill" role="tab" aria-selected="false" data-filter="templates">قوالب تصميم</button>
+        <button class="cat-pill" role="tab" aria-selected="false" data-filter="courses">دورات تعليمية</button>
+        <button class="cat-pill" role="tab" aria-selected="false" data-filter="ebooks">كتب إلكترونية</button>
+        <button class="cat-pill" role="tab" aria-selected="false" data-filter="icons">أيقونات ورسومات</button>
+        <button class="cat-pill" role="tab" aria-selected="false" data-filter="uikits">واجهات مواقع</button>
+        <button class="cat-pill" role="tab" aria-selected="false" data-filter="fonts">خطوط عربية</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT ROWS -->
+  <section id="rows" class="rows-section">
+
+    <div class="row-block" data-cat="templates">
+      <div class="wrap row-head">
+        <h2>قوالب تصميم جاهزة</h2>
+        <a href="#" class="row-link">عرض جميع القوالب</a>
+      </div>
+      <div class="row-scroller">
+        <div class="row-track">
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-template">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 9.5h17M9 9.5V21" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">Figma</span>
+              <h3>لوحة تحكم متجر إلكتروني</h3>
+              <p class="pcard-seller">بواسطة نور الشمري</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.9</span>
+                <span class="pcard-price">$29</span>
+              </div>
+              <button class="btn btn-add" data-name="لوحة تحكم متجر إلكتروني" data-price="29">أضف إلى السلة</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-template alt">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">Canva</span>
+              <h3>قالب هوية بصرية لمقهى</h3>
+              <p class="pcard-seller">بواسطة سارة العبيدي</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.7</span>
+                <span class="pcard-price">$14</span>
+              </div>
+              <button class="btn btn-add" data-name="قالب هوية بصرية لمقهى" data-price="14">أضف إلى السلة</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-template">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5.5" width="17" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 9.5h10M7 13.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">Notion</span>
+              <h3>نظام إدارة المشاريع الشخصي</h3>
+              <p class="pcard-seller">بواسطة عمر حسن</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.8</span>
+                <span class="pcard-price">$9</span>
+              </div>
+              <button class="btn btn-add" data-name="نظام إدارة المشاريع الشخصي" data-price="9">أضف إلى السلة</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-template alt">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="7" height="17" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="13" y="3.5" width="7" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">Figma</span>
+              <h3>قالب سيرة ذاتية احترافي</h3>
+              <p class="pcard-seller">بواسطة نور الشمري</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.9</span>
+                <span class="pcard-price">$7</span>
+              </div>
+              <button class="btn btn-add" data-name="قالب سيرة ذاتية احترافي" data-price="7">أضف إلى السلة</button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row-block" data-cat="courses">
+      <div class="wrap row-head">
+        <h2>دورات ودروس تعليمية</h2>
+        <a href="#" class="row-link">عرض جميع الدورات</a>
+      </div>
+      <div class="row-scroller">
+        <div class="row-track">
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-course">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5V5.5Z" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">فيديو</span>
+              <h3>أساسيات تجربة المستخدم UX</h3>
+              <p class="pcard-seller">بواسطة أكاديمية بكسل</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.9</span>
+                <span class="pcard-price">$39</span>
+              </div>
+              <button class="btn btn-add" data-name="أساسيات تجربة المستخدم UX" data-price="39">أضف إلى السلة</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-course alt">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M12 3 3 8l9 5 9-5-9-5ZM3 13l9 5 9-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">فيديو</span>
+              <h3>التسويق عبر المحتوى من الصفر</h3>
+              <p class="pcard-seller">بواسطة مصطفى كريم</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.6</span>
+                <span class="pcard-price">$24</span>
+              </div>
+              <button class="btn btn-add" data-name="التسويق عبر المحتوى من الصفر" data-price="24">أضف إلى السلة</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-course">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M4 18V8l8-4 8 4v10" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">فيديو</span>
+              <h3>بناء متجر إلكتروني متكامل</h3>
+              <p class="pcard-seller">بواسطة أكاديمية بكسل</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.8</span>
+                <span class="pcard-price">$49</span>
+              </div>
+              <button class="btn btn-add" data-name="بناء متجر إلكتروني متكامل" data-price="49">أضف إلى السلة</button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row-block" data-cat="ebooks">
+      <div class="wrap row-head">
+        <h2>كتب إلكترونية</h2>
+        <a href="#" class="row-link">عرض جميع الكتب</a>
+      </div>
+      <div class="row-scroller">
+        <div class="row-track">
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-ebook">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M4 5c2.5-1.2 5-1.2 7.5 0v14c-2.5-1.2-5-1.2-7.5 0V5ZM19.5 5c-2.5-1.2-5-1.2-7.5 0v14c2.5-1.2 5-1.2 7.5 0V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">PDF</span>
+              <h3>دليل التسويق الرقمي 2026</h3>
+              <p class="pcard-seller">بواسطة هدى مراد</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.7</span>
+                <span class="pcard-price">$12</span>
+              </div>
+              <button class="btn btn-add" data-name="دليل التسويق الرقمي 2026" data-price="12">أضف إلى السلة</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-ebook alt">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M4 4h11l5 5v11H4V4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M15 4v5h5" stroke="currentColor" stroke-width="1.5"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">EPUB</span>
+              <h3>كتابة نصوص تبيع</h3>
+              <p class="pcard-seller">بواسطة مصطفى كريم</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.9</span>
+                <span class="pcard-price">$8</span>
+              </div>
+              <button class="btn btn-add" data-name="كتابة نصوص تبيع" data-price="8">أضف إلى السلة</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-ebook">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M4 5c2.5-1.2 5-1.2 7.5 0v14c-2.5-1.2-5-1.2-7.5 0V5ZM19.5 5c-2.5-1.2-5-1.2-7.5 0v14c2.5-1.2 5-1.2 7.5 0V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">PDF</span>
+              <h3>أساسيات العمل الحر</h3>
+              <p class="pcard-seller">بواسطة هدى مراد</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.5</span>
+                <span class="pcard-price">$6</span>
+              </div>
+              <button class="btn btn-add" data-name="أساسيات العمل الحر" data-price="6">أضف إلى السلة</button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row-block" data-cat="icons">
+      <div class="wrap row-head">
+        <h2>أيقونات ورسومات</h2>
+        <a href="#" class="row-link">عرض جميع الحِزم</a>
+      </div>
+      <div class="row-scroller">
+        <div class="row-track">
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-icons">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/><rect x="13.5" y="4.5" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 20l6-6 3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">SVG</span>
+              <h3>حزمة أيقونات الأعمال — 300 أيقونة</h3>
+              <p class="pcard-seller">بواسطة استوديو نقطة</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.8</span>
+                <span class="pcard-price">$5</span>
+              </div>
+              <button class="btn btn-add" data-name="حزمة أيقونات الأعمال" data-price="5">أضف إلى السلة</button>
+            </div>
+          </article>
+
+          <article class="pcard">
+            <div class="pcard-thumb thumb-icons alt">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.6-9.5 9-9.5 9Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="pcard-body">
+              <span class="pcard-tag">PNG</span>
+              <h3>رسومات خط توضيحي — عمل عن بعد</h3>
+              <p class="pcard-seller">بواسطة استوديو نقطة</p>
+              <div class="pcard-foot">
+                <span class="pcard-rating">★ 4.6</span>
+                <span class="pcard-price">$11</span>
+              </div>
+              <button class="btn btn-add" data-name="رسومات خط توضيحي" data-price="11">أضف إلى السلة</button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- WHY -->
+  <section class="why" id="why">
+    <div class="wrap why-inner">
+      <div class="why-item">
+        <span class="why-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6l7-3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>مراجعة قبل النشر</h3>
+        <p>كل منتج يمر بفحص جودة من فريقنا قبل أن يظهر في المتجر، فلا تفاجأ بملفات ناقصة أو أوصاف مضللة.</p>
+      </div>
+      <div class="why-item">
+        <span class="why-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="6" width="17" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 10h17" stroke="currentColor" stroke-width="1.6"/></svg>
+        </span>
+        <h3>دفع آمن ومحلي</h3>
+        <p>بطاقات، ومحافظ رقمية، مع تشفير كامل لبياناتك من أول خطوة إلى تأكيد الشراء.</p>
+      </div>
+      <div class="why-item">
+        <span class="why-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v12H8l-4 4V4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>دعم يرد خلال ساعات</h3>
+        <p>فريق دعم عربي متاح للمشترين والبائعين، لأي استفسار قبل الشراء أو بعده.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SELLER CTA -->
+  <section class="sell-cta" id="sell">
+    <div class="wrap sell-inner">
+      <div>
+        <p class="kicker">للمصممين، المدرّبين، والكتّاب</p>
+        <h2>لديك منتج رقمي؟ ابدأ البيع على Sayanz</h2>
+        <p class="hero-lede">أنشئ متجرك الخاص خلال دقائق، وحدد أسعارك، ونحن نتكفل بالدفع والتوزيع والدعم الفني.</p>
+      </div>
+      <a href="#" class="btn btn-primary btn-lg">افتح متجرك الآن</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <a href="#top" class="logo">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" width="26" height="26">
+            <polygon points="20,2 37,11 37,29 20,38 3,29 3,11" fill="none" stroke="currentColor" stroke-width="2"/>
+            <polygon points="20,11 29,16 29,24 20,29 11,24 11,16" fill="currentColor" opacity="0.9"/>
+          </svg>
+        </span>
+        <span class="logo-word">sayanz</span>
+      </a>
+      <p>سوق عربي للمنتجات الرقمية — تصميم، تعليم، ومعرفة.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>المنتجات</h4>
+      <a href="#">قوالب تصميم</a>
+      <a href="#">دورات تعليمية</a>
+      <a href="#">كتب إلكترونية</a>
+      <a href="#">أيقونات ورسومات</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>الشركة</h4>
+      <a href="#">من نحن</a>
+      <a href="#sell">ابدأ البيع</a>
+      <a href="#">الشروط والأحكام</a>
+      <a href="#">سياسة الخصوصية</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>تواصل</h4>
+      <a href="mailto:hello@sayanz.co">hello@sayanz.co</a>
+      <a href="#">تويتر</a>
+      <a href="#">إنستغرام</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <p>© <span id="year"></span> Sayanz. جميع الحقوق محفوظة.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
