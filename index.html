@@ -1,399 +1,116 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sayanz Store | ساينز ستور</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sayanz Store | ساينز ستور</title>
+  <meta name="description" content="Sayanz Store - ألعاب ومنتجات رقمية">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-<!-- ================= HEADER ================= -->
-
-<header class="header">
-
-    <div class="header-left">
-
-        <button class="icon-btn">
-            🛒
-            <span class="cart-count">0</span>
-        </button>
-
-        <button class="icon-btn">👤</button>
-
-        <button class="icon-btn">⌕</button>
-
-    </div>
-
-    <div class="logo">
-        <span class="logo-symbol">S</span>
-        <span>Sayanz</span>
-    </div>
-
+  <header class="topbar">
+    <a class="logo" href="#"><span>✦</span> SAYANZ <small>STORE</small></a>
     <nav>
-
-        <a class="active" href="#">الرئيسية</a>
-        <a href="#products">المنتجات المتوفرة</a>
-        <a href="#accounts">الحسابات</a>
-        <a href="#subscriptions">الاشتراكات</a>
-        <a href="#support">الدعم</a>
-
+      <a href="#home">الرئيسية</a>
+      <a href="#store">المتجر</a>
+      <a href="#offers">العروض</a>
+      <a href="#support">الدعم</a>
     </nav>
-
-</header>
-
-
-<!-- ================= HERO ================= -->
-
-<section class="hero">
-
-    <div class="hero-glow"></div>
-
-    <div class="hero-content">
-
-        <div class="small-title">
-            ⚡ متجرك الرقمي الأول
-        </div>
-
-        <h1>
-            <span>Sayanz</span>
-        </h1>
-
-        <h2>
-            كل ما تحتاجه في عالم الألعاب
-            <br>
-            والمنتجات الرقمية
-        </h2>
-
-        <div class="hero-features">
-
-            <div>
-                ⚡
-                <span>تسليم فوري</span>
-            </div>
-
-            <div>
-                🛡️
-                <span>آمن 100%</span>
-            </div>
-
-            <div>
-                🎧
-                <span>دعم على مدار الساعة</span>
-            </div>
-
-        </div>
-
-        <a href="#products" class="main-button">
-            تسوق الآن
-            <span>←</span>
-        </a>
-
+    <div class="actions">
+      <button aria-label="بحث">⌕</button>
+      <button aria-label="السلة" onclick="openCart()">🛒 <b id="cartCount">0</b></button>
     </div>
+  </header>
 
+  <main>
+    <section id="home" class="hero">
+      <div>
+        <p class="eyebrow">WELCOME TO SAYANZ STORE</p>
+        <h1>عالمك للألعاب<br><span>والمنتجات الرقمية</span></h1>
+        <p class="lead">اكتشف الألعاب، البطاقات، الحسابات والمنتجات الرقمية بأسلوب بسيط وسريع.</p>
+        <a class="primary" href="#store">تصفح المتجر ←</a>
+      </div>
+      <div class="hero-card">
+        <div class="orb">S</div>
+        <p>منتجات رقمية مختارة</p>
+        <strong>ابدأ التسوق الآن</strong>
+      </div>
+    </section>
 
-    <!-- Gaming artwork -->
+    <section class="section">
+      <div class="section-head"><div><p class="eyebrow">CATEGORIES</p><h2>تصفح الأقسام</h2></div></div>
+      <div class="categories">
+        <a href="#store">🎮<span>الألعاب</span></a>
+        <a href="#store">💳<span>بطاقات وشحن</span></a>
+        <a href="#store">👤<span>حسابات الألعاب</span></a>
+        <a href="#store">🪙<span>عملات وموارد الألعاب</span></a>
+        <a href="#store">🔑<span>مفاتيح وتراخيص الألعاب</span></a>
+        <a href="#store">💻<span>برامج واشتراكات</span></a>
+        <a href="#offers">🎁<span>العروض والخصومات</span></a>
+        <a href="#store">🔥<span>الأكثر مبيعًا</span></a>
+      </div>
+    </section>
 
-    <div class="gaming-scene">
+    <section id="store" class="section">
+      <div class="section-head">
+        <div><p class="eyebrow">SAYANZ STORE</p><h2>المنتجات المتوفرة</h2></div>
+      </div>
+      <div class="products available-products">
+        <a class="product-card" href="#minecraft"><div class="product-art">🟩</div><div class="product-info"><h3>حسابات ماينكرافت</h3><p>حسابات Minecraft المتوفرة</p><strong>السعر يحدد لاحقًا</strong></div></a>
+        <a class="product-card" href="#fortnite"><div class="product-art">🟦</div><div class="product-info"><h3>حسابات فورت نايت</h3><p>حسابات Fortnite المتوفرة</p><strong>السعر يحدد لاحقًا</strong></div></a>
+        <a class="product-card" href="#xbox"><div class="product-art">🟪</div><div class="product-info"><h3>حسابات إكس بوكس</h3><p>حسابات Xbox المتوفرة</p><strong>السعر يحدد لاحقًا</strong></div></a>
+        <a class="product-card" href="#steam"><div class="product-art">🟨</div><div class="product-info"><h3>حسابات ألعاب ستيم</h3><p>حسابات Steam المتوفرة</p><strong>السعر يحدد لاحقًا</strong></div></a>
+      </div>
+    </section>
 
-        <div class="light-beam beam-one"></div>
-        <div class="light-beam beam-two"></div>
+    <section id="offers" class="offer">
+      <div><p class="eyebrow">SPECIAL OFFERS</p><h2>عروض Sayanz Store</h2><p>تابع المنتجات المخفضة والعروض الجديدة باستمرار.</p></div>
+      <a class="primary" href="#store">اكتشف العروض</a>
+    </section>
 
-        <div class="game-card minecraft">
+    <section id="support" class="section support">
+      <p class="eyebrow">SUPPORT</p><h2>هل تحتاج مساعدة؟</h2>
+      <p>الدفع عبر Mastercard، وبعد تأكيد الدفع يتم تسليم المنتج يدويًا.</p>
+      <button class="primary" onclick="alert('أضف رابط واتساب/تيليجرام هنا لاحقًا')">تواصل مع الدعم</button>
+    </section>
+  </main>
 
-            <div class="game-art minecraft-art">
-                ⛏️
-                <strong>MINECRAFT</strong>
-            </div>
+  <footer><strong>SAYANZ STORE</strong><span>© 2026 جميع الحقوق محفوظة</span></footer>
 
-        </div>
-
-        <div class="game-card fortnite">
-
-            <div class="game-art fortnite-art">
-                🎮
-                <strong>FORTNITE</strong>
-            </div>
-
-        </div>
-
-        <div class="game-card xbox">
-
-            <div class="game-art xbox-art">
-                XBOX
-            </div>
-
-        </div>
-
-        <div class="game-card steam">
-
-            <div class="game-art steam-art">
-                STEAM
-            </div>
-
-        </div>
-
-        <div class="controller">
-            🎮
-        </div>
-
+  <div class="modal" id="cartModal" onclick="if(event.target===this)closeCart()">
+    <div class="cart">
+      <button class="close" onclick="closeCart()">×</button>
+      <h2>سلة المشتريات</h2>
+      <div id="cartItems"></div>
+      <div class="total"><span>المجموع</span><strong id="total">0 IQD</strong></div>
+      <button class="primary full" onclick="checkout()">متابعة الدفع</button>
     </div>
+  </div>
 
-</section>
-
-
-<!-- ================= BENEFITS ================= -->
-
-<section class="benefits">
-
-    <div class="benefit">
-
-        <div class="benefit-icon">⭐</div>
-
-        <div>
-            <h3>منتجات أصلية</h3>
-            <p>من مصادر رسمية وموثوقة</p>
-        </div>
-
+  <div class="modal" id="checkoutModal" onclick="if(event.target===this)closeCheckout()">
+    <div class="cart">
+      <button class="close" onclick="closeCheckout()">×</button>
+      <h2>إتمام الطلب</h2>
+      <p style="color:#a7a4bb;font-size:13px">أدخل بياناتك لإرسال الطلب. سيتم تأكيد الدفع والتسليم يدويًا.</p>
+      <form id="orderForm" onsubmit="submitOrder(event)">
+        <label>الاسم<input required id="customerName" placeholder="اسمك الكامل"></label>
+        <label>البريد الإلكتروني<input required type="email" id="customerEmail" placeholder="example@email.com"></label>
+        <label>رقم الهاتف<input required id="customerPhone" placeholder="07xxxxxxxxx"></label>
+        <label>طريقة الدفع<div class="paybox">💳 Mastercard</div></label>
+        <label>رقم/مرجع عملية الدفع<input id="paymentRef" placeholder="أدخل مرجع العملية إن وجد"></label>
+        <button class="primary full" type="submit">إرسال الطلب</button>
+      </form>
     </div>
-
-
-    <div class="benefit">
-
-        <div class="benefit-icon">🎧</div>
-
-        <div>
-            <h3>دعم فني متميز</h3>
-            <p>نحن هنا لمساعدتك</p>
-        </div>
-
+  </div>
+  <div class="modal" id="successModal">
+    <div class="cart" style="text-align:center">
+      <div style="font-size:48px">✅</div>
+      <h2>تم إرسال طلبك</h2>
+      <p id="orderNumber" style="color:#a7a4bb"></p>
+      <p style="color:#a7a4bb">احتفظ برقم الطلب للتواصل مع الدعم.</p>
+      <button class="primary" onclick="closeSuccess()">حسنًا</button>
     </div>
-
-
-    <div class="benefit">
-
-        <div class="benefit-icon">⚡</div>
-
-        <div>
-            <h3>تسليم فوري</h3>
-            <p>بعد إتمام الدفع مباشرة</p>
-        </div>
-
-    </div>
-
-
-    <div class="benefit">
-
-        <div class="benefit-icon">🛡️</div>
-
-        <div>
-            <h3>طرق دفع آمنة</h3>
-            <p>بطاقاتك في أمان</p>
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================= PRODUCTS ================= -->
-
-<section class="products-section" id="products">
-
-    <div class="section-heading">
-
-        <div>
-            <span>اختر من بين حسابات الألعاب التي تناسبك</span>
-            <h2>المنتجات المتوفرة</h2></div>
-
-        <div class="heading-line"></div>
-
-    </div>
-
-
-    <div class="products-grid">
-
-
-        <!-- Minecraft -->
-
-        <article class="product-card minecraft-card">
-
-            <div class="product-image minecraft-bg">
-
-                <div class="product-game-icon">
-                    ⛏️
-                </div>
-
-                <h3>MINECRAFT</h3>
-
-            </div>
-
-            <div class="product-info">
-
-                <div class="product-icon">🟩</div>
-
-                <div class="product-text">
-
-                    <h3>حسابات ماينكرافت</h3>
-
-                    <p>حسابات أصلية وآمنة</p>
-
-                </div>
-
-                <button class="product-button">
-                    تصفح المنتجات →
-                </button>
-
-            </div>
-
-        </article>
-
-
-        <!-- Fortnite -->
-
-        <article class="product-card fortnite-card">
-
-            <div class="product-image fortnite-bg">
-
-                <div class="product-game-icon">
-                    🎮
-                </div>
-
-                <h3>FORTNITE</h3>
-
-            </div>
-
-            <div class="product-info">
-
-                <div class="product-icon">F</div>
-
-                <div class="product-text">
-
-                    <h3>حسابات فورت نايت</h3>
-
-                    <p>حسابات أصلية وآمنة</p>
-
-                </div>
-
-                <button class="product-button">
-                    تصفح المنتجات →
-                </button>
-
-            </div>
-
-        </article>
-
-
-        <!-- Xbox -->
-
-        <article class="product-card xbox-card">
-
-            <div class="product-image xbox-bg">
-
-                <div class="product-game-icon">
-                    X
-                </div>
-
-                <h3>XBOX</h3>
-
-            </div>
-
-            <div class="product-info">
-
-                <div class="product-icon">◉</div>
-
-                <div class="product-text">
-
-                    <h3>حسابات إكس بوكس</h3>
-
-                    <p>حسابات أصلية وآمنة</p>
-
-                </div>
-
-                <button class="product-button">
-                    تصفح المنتجات →
-                </button>
-
-            </div>
-
-        </article>
-
-
-        <!-- Steam -->
-
-        <article class="product-card steam-card">
-
-            <div class="product-image steam-bg">
-
-                <div class="product-game-icon">
-                    ⚙
-                </div>
-
-                <h3>STEAM</h3>
-
-            </div>
-
-            <div class="product-info">
-
-                <div class="product-icon">◉</div>
-
-                <div class="product-text">
-
-                    <h3>ألعاب ستيم</h3>
-
-                    <p>حسابات أصلية وآمنة</p>
-
-                </div>
-
-                <button class="product-button">
-                    تصفح المنتجات →
-                </button>
-
-            </div>
-
-        </article>
-
-    </div>
-
-</section>
-
-
-<!-- ================= FOOTER ================= -->
-
-<footer>
-
-    <div class="footer-logo">
-        <span>S</span>
-        Sayanz
-    </div>
-
-    <p>
-        أكثر من مجرد متجر .. نحن شريكك في عالم الألعاب
-    </p>
-
-    <div class="social">
-
-        <span>◉</span>
-        <span>▶</span>
-        <span>◎</span>
-        <span>➤</span>
-
-    </div>
-
-    <div class="footer-bottom">
-        SAYANZ STORE
-    </div>
-
-</footer>
-
-
-<script src="script.js"></script>
-
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
