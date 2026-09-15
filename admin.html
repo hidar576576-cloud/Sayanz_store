@@ -1,0 +1,10 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sayanz Admin</title><link rel="stylesheet" href="style.css"></head>
+<body><header class="topbar"><a class="logo" href="index.html"><span>✦</span> SAYANZ <small>ADMIN</small></a><a class="primary" href="index.html">العودة للمتجر</a></header>
+<main class="section"><p class="eyebrow">ADMIN PANEL</p><h1>إدارة الطلبات</h1><p style="color:#a7a4bb">هذه لوحة تجريبية محلية للمرحلة الأولى.</p><div id="orders"></div></main>
+<script>
+function render(){const o=JSON.parse(localStorage.getItem("sayanzOrders")||"[]");const box=document.getElementById("orders");
+if(!o.length){box.innerHTML='<div class="cart" style="margin-top:20px">لا توجد طلبات حتى الآن.</div>';return}
+box.innerHTML=o.slice().reverse().map((x,i)=>`<div class="cart" style="margin:16px 0"><h2>${x.id}</h2><p>العميل: ${x.customer.name} — ${x.customer.phone}</p><p>البريد: ${x.customer.email}</p><p>الدفع: ${x.payment} ${x.paymentRef?("— "+x.paymentRef):""}</p><p>المنتجات: ${x.products.map(p=>p.name).join("، ")}</p><p><strong>المجموع: ${new Intl.NumberFormat('en-US').format(x.total)} IQD</strong></p><label>الحالة<select onchange="changeStatus('${x.id}',this.value)" style="width:100%;padding:11px;margin-top:7px;background:#0b0b18;color:white;border:1px solid #2c2a48;border-radius:10px"><option ${x.status==="بانتظار الدفع"?"selected":""}>بانتظار الدفع</option><option ${x.status==="قيد المراجعة"?"selected":""}>قيد المراجعة</option><option ${x.status==="تم الدفع"?"selected":""}>تم الدفع</option><option ${x.status==="جاري التسليم"?"selected":""}>جاري التسليم</option><option ${x.status==="تم التسليم"?"selected":""}>تم التسليم</option></select></label></div>`).join("")}
+function changeStatus(id,status){let o=JSON.parse(localStorage.getItem("sayanzOrders")||"[]");let x=o.find(v=>v.id===id);if(x)x.status=status;localStorage.setItem("sayanzOrders",JSON.stringify(o));render()}
+render();
+</script></body></html>
